@@ -34,6 +34,12 @@ class TransactionController {
                     });
                 }
                 const CONFIG_FEE = 10;
+                // @ts-ignore
+                if (findDebitorAccount.balance < amount + CONFIG_FEE) {
+                    return res.status(400).json({
+                        message: "Insufficient Fund"
+                    });
+                }
                 //    Get both the balance of
                 //    @ts-ignore
                 const debitorBalance = findDebitorAccount.balance - (amount + CONFIG_FEE);
