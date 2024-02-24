@@ -33,7 +33,7 @@ exports.db.once("open", function () {
     console.log("Connected to database");
     // Routes
     app.use("/auth", auth_route_1.default);
-    app.use("/transaction", transaction_route_1.default);
+    app.use("/transactions", transaction_route_1.default);
     app.use("/account", account_route_1.default);
     app.get("/", (req, res) => {
         res.json("Server is live");

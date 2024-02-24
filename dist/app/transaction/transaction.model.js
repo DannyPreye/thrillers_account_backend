@@ -33,6 +33,8 @@ const transactionSchema = new mongoose_1.default.Schema({
         ref: "Account",
         required: true,
     }
+}, {
+    timestamps: true
 });
 const Transaction = mongoose_1.default.model("Transaction", transactionSchema);
 exports.default = Transaction;

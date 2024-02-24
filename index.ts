@@ -46,7 +46,7 @@ db.once("open", function ()
 
     // Routes
     app.use("/auth", authRouter);
-    app.use("/transaction", transactionRouter);
+    app.use("/transactions", transactionRouter);
     app.use("/account", accountRouter);
 
 

@@ -11,12 +11,12 @@ transactionRouter.post("/transfer",
     TransactionController.transferFunds
 );
 
-transactionRouter.get("/transactions",
+transactionRouter.get("/",
     authMiddleWare,
     TransactionController.getTransactions
 );
 
-transactionRouter.get("/transactions/:id",
+transactionRouter.get("/:id",
     authMiddleWare,
     TransactionController.getTransaction
 );
