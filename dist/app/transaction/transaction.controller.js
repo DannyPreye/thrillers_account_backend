@@ -42,7 +42,7 @@ class TransactionController {
                         message: "Insufficient Fund"
                     });
                 }
-                //    Get both the balance of
+                //    Get both the balance of the creditor and debitor
                 //    @ts-ignore
                 const debitorBalance = Number(findDebitorAccount.balance) - totalDebitAmount;
                 const creditorBalance = Number(findCreditorAccount.balance) + amountToNumber;
