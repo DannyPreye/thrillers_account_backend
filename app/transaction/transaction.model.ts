@@ -28,8 +28,12 @@ const transactionSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Account",
         required: true,
+    },
+    sender_or_reciever: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
     }
-
 }, {
     timestamps: true
 });

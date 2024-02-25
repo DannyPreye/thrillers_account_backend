@@ -58,14 +58,16 @@ class TransactionController {
                     type: "debit",
                     description: description,
                     amount: totalDebitAmount,
-                    account: findDebitorAccount === null || findDebitorAccount === void 0 ? void 0 : findDebitorAccount._id
+                    account: findDebitorAccount === null || findDebitorAccount === void 0 ? void 0 : findDebitorAccount._id,
+                    sender_or_reciever: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount.user
                 });
                 const creditorTransaction = new transaction_model_1.default({
                     user: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount.user,
                     type: "credit",
                     description: description,
                     amount: amountToNumber,
-                    account: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount._id
+                    account: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount._id,
+                    sender_or_reciever: findDebitorAccount === null || findDebitorAccount === void 0 ? void 0 : findDebitorAccount.user
                 });
                 creditorTransaction.save();
                 debitorTransaction.save();
@@ -86,7 +88,7 @@ class TransactionController {
             try {
                 // @ts-ignore
                 const user = req.user;
-                const transactions = yield transaction_model_1.default.find({ user: user._id });
+                const transactions = yield transaction_model_1.default.find({ user: user._id }).populate("sender_or_reciever", "first_name last_name");
                 return res.status(200).json({
                     message: "Transactions",
                     data: transactions

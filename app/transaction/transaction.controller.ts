@@ -68,7 +68,8 @@ export default class TransactionController
                 type: "debit",
                 description: description,
                 amount: totalDebitAmount,
-                account: findDebitorAccount?._id
+                account: findDebitorAccount?._id,
+                sender_or_reciever: findCreditorAccount?.user
             });
 
 
@@ -77,7 +78,8 @@ export default class TransactionController
                 type: "credit",
                 description: description,
                 amount: amountToNumber,
-                account: findCreditorAccount?._id
+                account: findCreditorAccount?._id,
+                sender_or_reciever: findDebitorAccount?.user
 
             });
 
@@ -112,8 +114,7 @@ export default class TransactionController
 
 
 
-            const transactions = await Transaction.find({ user: user._id });
-
+            const transactions = await Transaction.find({ user: user._id }).populate("sender_or_reciever", "first_name last_name");
 
 
             return res.status(200).json({
