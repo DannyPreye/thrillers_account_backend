@@ -9,6 +9,10 @@ const transactionSchema = new mongoose_1.default.Schema({
         type: Number,
         required: true,
     },
+    transaction_fee: {
+        type: Number,
+        default: 0
+    },
     type: {
         type: String,
         required: true,

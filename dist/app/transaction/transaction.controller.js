@@ -59,7 +59,8 @@ class TransactionController {
                     description: description,
                     amount: totalDebitAmount,
                     account: findDebitorAccount === null || findDebitorAccount === void 0 ? void 0 : findDebitorAccount._id,
-                    sender_or_reciever: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount.user
+                    sender_or_reciever: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount.user,
+                    transaction_fee: CONFIG_FEE
                 });
                 const creditorTransaction = new transaction_model_1.default({
                     user: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount.user,

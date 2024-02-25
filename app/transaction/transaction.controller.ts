@@ -69,7 +69,8 @@ export default class TransactionController
                 description: description,
                 amount: totalDebitAmount,
                 account: findDebitorAccount?._id,
-                sender_or_reciever: findCreditorAccount?.user
+                sender_or_reciever: findCreditorAccount?.user,
+                transaction_fee: CONFIG_FEE
             });
 
 

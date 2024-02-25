@@ -5,6 +5,11 @@ const transactionSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    transaction_fee: {
+        type: Number,
+        default: 0
+
+    },
     type: {
         type: String,
         required: true,
@@ -24,6 +29,7 @@ const transactionSchema = new mongoose.Schema({
         ref: "User",
         required: true,
     },
+
     account: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Account",
