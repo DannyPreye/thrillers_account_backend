@@ -20,7 +20,8 @@ class TransactionController {
             try {
                 // @ts-ignore
                 const user = req.user;
-                const { amount, account_number, transaction_description } = req.body;
+                const { amount, account_number, description } = req.body;
+                const amountToNumber = Number(amount);
                 const findDebitorAccount = yield account_model_1.default.findOne({ user: user._id });
                 const findCreditorAccount = yield account_model_1.default.findOne({ account_number });
                 if (!findCreditorAccount) {
@@ -34,16 +35,17 @@ class TransactionController {
                     });
                 }
                 const CONFIG_FEE = 10;
+                const totalDebitAmount = amountToNumber + CONFIG_FEE;
                 // @ts-ignore
-                if (findDebitorAccount.balance < amount + CONFIG_FEE) {
+                if (totalDebitAmount > (findDebitorAccount === null || findDebitorAccount === void 0 ? void 0 : findDebitorAccount.balance)) {
                     return res.status(400).json({
                         message: "Insufficient Fund"
                     });
                 }
                 //    Get both the balance of
                 //    @ts-ignore
-                const debitorBalance = findDebitorAccount.balance - (amount + CONFIG_FEE);
-                const creditorBalance = findCreditorAccount.balance + amount;
+                const debitorBalance = Number(findDebitorAccount.balance) - totalDebitAmount;
+                const creditorBalance = Number(findCreditorAccount.balance) + amountToNumber;
                 // save the account balance for both accounts
                 // @ts-ignore
                 findDebitorAccount.balance = debitorBalance;
@@ -52,17 +54,17 @@ class TransactionController {
                 yield (findDebitorAccount === null || findDebitorAccount === void 0 ? void 0 : findDebitorAccount.save());
                 // Save the transaction details
                 const debitorTransaction = new transaction_model_1.default({
-                    user: findDebitorAccount === null || findDebitorAccount === void 0 ? void 0 : findDebitorAccount._id,
+                    user: findDebitorAccount === null || findDebitorAccount === void 0 ? void 0 : findDebitorAccount.user,
                     type: "debit",
-                    description: transaction_description,
-                    amount: amount + CONFIG_FEE,
+                    description: description,
+                    amount: totalDebitAmount,
                     account: findDebitorAccount === null || findDebitorAccount === void 0 ? void 0 : findDebitorAccount._id
                 });
                 const creditorTransaction = new transaction_model_1.default({
-                    user: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount._id,
+                    user: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount.user,
                     type: "credit",
-                    description: transaction_description,
-                    amount: amount,
+                    description: description,
+                    amount: amountToNumber,
                     account: findCreditorAccount === null || findCreditorAccount === void 0 ? void 0 : findCreditorAccount._id
                 });
                 creditorTransaction.save();

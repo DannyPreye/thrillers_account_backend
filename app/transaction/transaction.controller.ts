@@ -11,7 +11,9 @@ export default class TransactionController
             // @ts-ignore
             const user = req.user as unknown as JWTPayloadType;
 
-            const { amount, account_number, transaction_description } = req.body;
+            const { amount, account_number, description } = req.body;
+
+            const amountToNumber = Number(amount);
 
             const findDebitorAccount = await Account.findOne({ user: user._id });
 
@@ -30,8 +32,11 @@ export default class TransactionController
             }
             const CONFIG_FEE = 10;
 
+
+            const totalDebitAmount = amountToNumber + CONFIG_FEE;
+
             // @ts-ignore
-            if (findDebitorAccount.balance < amount + CONFIG_FEE) {
+            if (totalDebitAmount > findDebitorAccount?.balance) {
                 return res.status(400).json({
                     message: "Insufficient Fund"
                 });
@@ -39,10 +44,11 @@ export default class TransactionController
 
 
 
-            //    Get both the balance of
+
+            //    Get both the balance of the creditor and debitor
             //    @ts-ignore
-            const debitorBalance = findDebitorAccount.balance - (amount + CONFIG_FEE);
-            const creditorBalance = findCreditorAccount.balance + amount;
+            const debitorBalance = Number(findDebitorAccount.balance) - totalDebitAmount;
+            const creditorBalance = Number(findCreditorAccount.balance) + amountToNumber;
 
 
 
@@ -58,19 +64,19 @@ export default class TransactionController
 
             // Save the transaction details
             const debitorTransaction = new Transaction({
-                user: findDebitorAccount?._id,
+                user: findDebitorAccount?.user,
                 type: "debit",
-                description: transaction_description,
-                amount: amount + CONFIG_FEE,
+                description: description,
+                amount: totalDebitAmount,
                 account: findDebitorAccount?._id
             });
 
 
             const creditorTransaction = new Transaction({
-                user: findCreditorAccount?._id,
+                user: findCreditorAccount?.user,
                 type: "credit",
-                description: transaction_description,
-                amount: amount,
+                description: description,
+                amount: amountToNumber,
                 account: findCreditorAccount?._id
 
             });
@@ -103,7 +109,12 @@ export default class TransactionController
             // @ts-ignore
             const user = req.user as unknown as JWTPayloadType;
 
+
+
+
             const transactions = await Transaction.find({ user: user._id });
+
+
 
             return res.status(200).json({
                 message: "Transactions",
